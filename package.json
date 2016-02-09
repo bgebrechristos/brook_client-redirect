@@ -1,6 +1,9 @@
 {
   "name": "brook-client-redirect",
-  "version": "1.0.0",
+  "version": "1.0.3",
+  "bin": {
+    "brook-client-redirect": "./bin/app.js"
+  },
   "description": "Check if there is a client redirect setup on the URL",
   "main": "app.js",
   "scripts": {

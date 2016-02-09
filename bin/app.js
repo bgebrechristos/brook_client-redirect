@@ -1,9 +1,11 @@
+#!/usr/bin/env node
+
 var request = require("request");
 var chalk = require("chalk");
 var fs = require("fs");
 var program = require("commander");
-var terminal = require("./terminal.js");
-var checkForRedirect = require('./checkForRedirect.js');
+var terminal = require("../lib/terminal.js");
+var checkForRedirect = require('../lib/checkForRedirect.js');
 
 program
 	.usage('\<[options] file\>')
