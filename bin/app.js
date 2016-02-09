@@ -6,8 +6,10 @@ var fs = require("fs");
 var program = require("commander");
 var terminal = require("../lib/terminal.js");
 var checkForRedirect = require('../lib/checkForRedirect.js');
+var pkg = require('../package.json');
 
 program
+    .version(pkg.version)
 	.usage('\<[options] file\>')
 	.option('-F, --file <item>', 'Path to a file, containing a newline separated list of URLs')
 	.parse(process.argv);
@@ -36,12 +38,10 @@ if (process.argv.length <= 2) {
 				error(err.message);
 			}
 		}).then(function(links) {
-			//console.log(JSON.stringify(links, null, 4));
 			terminal.output(links);
 		});
 		
-	} //end of program.file if
-	
+	} //end of program.file
 } //close main else
 
 

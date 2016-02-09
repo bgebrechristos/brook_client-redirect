@@ -1,6 +1,6 @@
 {
   "name": "brook-client-redirect",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "bin": {
     "brook-client-redirect": "./bin/app.js"
   },
