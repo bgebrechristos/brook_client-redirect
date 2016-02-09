@@ -2,11 +2,8 @@ var request = require("request");
 var chalk = require("chalk");
 var fs = require("fs");
 var program = require("commander");
-var prompt = require("prompt");
-var cheerio = require("cheerio");
-var URL = require("url");
-var ProgressBar = require("progress");
 var terminal = require("./terminal.js");
+var checkForRedirect = require('./checkForRedirect.js');
 
 program
 	.usage('\<[options] file\>')
@@ -20,9 +17,6 @@ var AUTH_PROMPT = {
 		pass : { description : "Password:".blue, required:true, hidden:true }
 	}
 };
-
-var counter = 0;
-var re = /setTimeout\(\"?window\.location\.replace\([\'*|\"*](.*)[\'*|\"*]\)/g;
 
 
 if (process.argv.length <= 2) {
@@ -118,53 +112,6 @@ function promptForAuth(url) {
 	});
 } //end of promptForAuth
 
-
-function checkForRedirect(urls, creds) {
-	return new Promise(function(resolve, reject) {
-		var auths = { auth : creds };
-		var links = [];
-		
-		var count = urls.length;
-		
-		console.log(chalk.blue("Loading urls for testing ....."));
-	
-		var bar = new ProgressBar("Evaluating ... [:bar] :percent :etas", {
-			complete: "=",
-			incomplete: " ",
-			width: 30,
-			total: urls.length,
-			stream: process.stderr
-		});
-		
-		urls.forEach(function(url) {
-			var obj = {
-			source : url,
-			};
-			//results will have sereverSide: value , clientSide : "boolean", clientValue: value
-			request(url, auths, function(err, res, html) {
-				if(err) return reject(err);
-				var $ = cheerio.load(html);
-				var script = $('script').text();
-				script.replace(re, "$1");
-				if(script.match(re)) {
-					obj.clientRedirect = true;
-					obj.redirectValue = URL.resolve(url, RegExp.$1);
-				} else {
-					obj.clientRedirect = false;
-				}
-				count --;
-				bar.tick();
-				links.push(obj);
-				
-				if (count === 0) {
-					resolve(links);
-				}
-			});
-		});	
-	});
-	
-} //end of checkForredirect
-
 function print(msg) {
 	console.log(msg);
 }
@@ -172,3 +119,4 @@ function print(msg) {
 function error(msg) {
 	console.log(chalk.red(msg));
 }
+
